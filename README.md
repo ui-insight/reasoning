@@ -1,5 +1,6 @@
-# reasoning - Training a Reasoning Model with GRPO
-QLoRA fine-tuning of an LLM to be a reasoning model using GRPO reinforcement learning.
+# reasoning - Training a Mathematical Reasoning Model with GRPO
+QLoRA fine-tuning of an LLM to be a reasoning model using GRPO reinforcement learning.  
+Trained in < 24 hours on an H100 GPU against the [GSM8K](https://github.com/openai/grade-school-math) dataset.  
 
 
 ![Untitled](https://github.com/user-attachments/assets/a0fbdfe4-f796-4a82-b0a8-035318b6e8d2)  
