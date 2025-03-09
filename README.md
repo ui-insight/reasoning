@@ -40,16 +40,10 @@ The fine-tuning was made much easier by using https://unsloth.ai:
 
 [![Alt text](https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384)](https://unsloth.ai)
 
-Specifically, unsloth leverages the GRPOTrainer class:
-
-https://huggingface.co/docs/trl/main/en/grpo_trainer  
+Specifically, unsloth leverages the [GRPOTrainer class](https://huggingface.co/docs/trl/main/en/grpo_trainer) from the [Transformer Reinforcement Learning (TRL) package](https://huggingface.co/docs/trl/en/index)
   
-from the Transformer Reinforcement Learning (TRL) package:   
   
-https://huggingface.co/docs/trl/en/index
-
-  
-Finally, the folks at [unsloth](https://unsloth.ai) have a great [blog post](https://unsloth.ai/blog/r1-reasoning) and [Google Collab notebook](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.1_(8B)-GRPO.ipynb) where they do something very similar.
+Finally, the folks at [unsloth](https://unsloth.ai) have a great [blog post](https://unsloth.ai/blog/r1-reasoning) and [Google Collab notebook](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.1_(8B)-GRPO.ipynb) where they do something very similar to what I've done here.
 
 
 
