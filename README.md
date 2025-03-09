@@ -1,5 +1,5 @@
-# reasoning
-Fine-tuning an LLM to be a reasoning model using GRPO reinforcement learning.
+# reasoning - Training a Reasoning Model with GRPO
+QLoRA fine-tuning of an LLM to be a reasoning model using GRPO reinforcement learning.
 
 
 ![Untitled](https://github.com/user-attachments/assets/a0fbdfe4-f796-4a82-b0a8-035318b6e8d2)  
@@ -25,15 +25,25 @@ These Videos are an amazing resource:
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/90ImcYM0xWc/0.jpg)](https://www.youtube.com/watch?v=90ImcYM0xWc)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/-7Y4s7ItQQ4/0.jpg)](https://www.youtube.com/watch?v=-7Y4s7ItQQ4)
 
+## The Math Behind GRPO
+https://medium.com/yugen-ai-technology-blog/understanding-the-math-behind-grpo-deepseek-r1-zero-9fb15e103a0a
+
+
 # The QLoRA Fine Tuning 
 
-The fine-tuning was made much easier by using unsloth.ai:
+The fine-tuning was made much easier by using https://unsloth.ai:
 
 [![Alt text](https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384)](https://unsloth.ai)
 
-Specifically, unsloth leverages the GRPOTrainer class from TRL:
+Specifically, unsloth leverages the GRPOTrainer class:
 
-https://huggingface.co/docs/trl/main/en/grpo_trainer
+https://huggingface.co/docs/trl/main/en/grpo_trainer  
+  
+from the Transformer Reinforcement Learning (TRL) package:   
+  
+https://huggingface.co/docs/trl/en/index
+
+
 
 
 
