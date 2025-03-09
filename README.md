@@ -12,6 +12,20 @@ DeepSeek-R1:
 https://arxiv.org/abs/2501.12948  
 
 
+Some resources:   
+Why GRPO is Important and How it Works:  
+
+https://www.oxen.ai/blog/why-grpo-is-important-and-how-it-works  
+https://www.oxen.ai/blog/training-a-rust-1-5b-coder-lm-with-reinforcement-learning-grpo  
+
+These Videos are an amazing resource:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/90ImcYM0xWc/0.jpg)](https://www.youtube.com/watch?v=90ImcYM0xWc)
+
+
+https://youtu.be/90ImcYM0xWc?si=il0d1VBTgZhF880q  
+https://youtu.be/-7Y4s7ItQQ4?si=y8RUP_HTy1miYLly  
+
 
 
 
