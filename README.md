@@ -12,7 +12,7 @@ DeepSeek-R1:
 https://arxiv.org/abs/2501.12948  
 
 
-Some resources:   
+# Some resources:
 Why GRPO is Important and How it Works:  
 
 https://www.oxen.ai/blog/why-grpo-is-important-and-how-it-works  
@@ -21,13 +21,16 @@ https://www.oxen.ai/blog/training-a-rust-1-5b-coder-lm-with-reinforcement-learni
 These Videos are an amazing resource:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/90ImcYM0xWc/0.jpg)](https://www.youtube.com/watch?v=90ImcYM0xWc)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/-7Y4s7ItQQ4/0.jpg)](https://www.youtube.com/watch?v=-7Y4s7ItQQ4)
+
+# The QLoRA Fine Tuning 
+
+The fine-tuning was made much easier by using unsloth.ai:
+
+[![Alt text](https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384)](https://unsloth.ai)
 
 
-https://youtu.be/90ImcYM0xWc?si=il0d1VBTgZhF880q  
-https://youtu.be/-7Y4s7ItQQ4?si=y8RUP_HTy1miYLly  
 
-
-
-
+https://unsloth.ai  
 
 <img width="400" alt="Untitled 2" src="https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384" />
