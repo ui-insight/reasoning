@@ -29,8 +29,9 @@ The fine-tuning was made much easier by using unsloth.ai:
 
 [![Alt text](https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384)](https://unsloth.ai)
 
+Specifically, unsloth leverages the GRPOTrainer class from TRL:
+
+https://huggingface.co/docs/trl/main/en/grpo_trainer
 
 
-https://unsloth.ai  
 
-<img width="400" alt="Untitled 2" src="https://github.com/user-attachments/assets/303f049a-ea6b-48ac-ab08-ab85f3ed2384" />
