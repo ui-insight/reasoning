@@ -11,6 +11,8 @@ https://arxiv.org/abs/2402.03300
 DeepSeek-R1:  
 https://arxiv.org/abs/2501.12948  
 
+<img width="1197" alt="image" src="https://github.com/user-attachments/assets/72be5d9a-71e5-460f-878d-103562b80585" />
+
 
 # Some resources:
 Why GRPO is Important and How it Works:  
