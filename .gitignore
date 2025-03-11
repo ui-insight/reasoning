@@ -3,3 +3,15 @@ venv
 unsloth_compiled_cache/*
 grpo_trainer_lora_model/*
 qwen2.5-3b-grpo/*
+llama.cpp/*
+merge.py
+*.gguf
+output.txt
+qwen2.5-3b-grpo-final/*
+qwen2.5-3b-grpo_gguf/*
+qwen2.5-3b-merged_hf/*
+README.md
+requirements.txt
+train.py
+unsloth_compiled_cache/*
+_unsloth_sentencepiece_temp/*
