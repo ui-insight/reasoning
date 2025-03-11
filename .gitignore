@@ -16,3 +16,4 @@ requirements.txt
 train.py
 unsloth_compiled_cache/*
 _unsloth_sentencepiece_temp/*
+*.swp
