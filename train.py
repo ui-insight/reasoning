@@ -24,6 +24,7 @@ import os
 import torch
 import numpy as np
 import math
+import argparse
 from datasets import load_dataset
 from transformers import TrainerCallback, logging
 from trl import GRPOConfig, GRPOTrainer
@@ -48,6 +49,9 @@ LEARNING_RATE = 1e-5  # Lowered learning rate for more stable training
 GRPO_GROUP_SIZE = 6  
 MAX_PROMPT_LENGTH = 512   # tokens
 MAX_COMPLETION_LENGTH = 4096  # tokens
+MAX_TRAINING_STEPS = 1000
+TEMPERATURE = 0.5
+NUM_SAVE_CHECKPOINTS = 10
 
 
 
@@ -431,6 +435,17 @@ def reward_function(completions, ground_truth, prompts=None, **kwargs):
 # Main training function.
 # -----------------------------------------------------------------------------
 def main():
+
+    # Parse command-line arguments.
+    parser = argparse.ArgumentParser(description="Train a GRPO model with optional checkpoint resume")
+    parser.add_argument(
+        "--checkpoint_path",
+        type=str,
+        default=None,
+        help="Path to checkpoint to resume training from (optional)."
+    )
+    args = parser.parse_args()
+
     # Set random seeds for reproducibility.
     torch.manual_seed(42)
     np.random.seed(42)
@@ -490,10 +505,10 @@ def main():
         use_vllm=True,                # Enable vLLM (ensure you have an available GPU for generation)
         warmup_steps=100,
         weight_decay=0.01,
-        max_steps=1000,
+        max_steps=MAX_TRAINING_STEPS,
         save_steps=50,
-        save_total_limit=3,
-        temperature=0.5,
+        save_total_limit=NUM_SAVE_CHECKPOINTS,
+        temperature=TEMPERATURE,
         beta=0.01,    # kl_weight
         per_device_train_batch_size=1,
         gradient_accumulation_steps=4,
@@ -522,9 +537,14 @@ def main():
     # Attach and store the callback for use in the reward function.
     trainer.add_callback(callback)
     trainer.callback = callback
+
+    # optionally resume training if checkpoint 
+    if args.checkpoint_path is not None:
+        print("Resuming training from checkpoint:", args.checkpoint_path)
+    trainer.train(resume_from_checkpoint=args.checkpoint_path)
     
     # Start training.
-    trainer.train()
+    #trainer.train()
     
     # Save the final model after training.
     trainer.save_model("./qwen2.5-3b-grpo-final")
