@@ -24,6 +24,7 @@ import os
 import torch
 import numpy as np
 import math
+import json
 import argparse
 from datasets import load_dataset
 from transformers import TrainerCallback, logging
@@ -49,7 +50,7 @@ LEARNING_RATE = 1e-5  # Lowered learning rate for more stable training
 GRPO_GROUP_SIZE = 6  
 MAX_PROMPT_LENGTH = 512   # tokens
 MAX_COMPLETION_LENGTH = 4096  # tokens
-MAX_TRAINING_STEPS = 1000
+DEFAULT_TRAINING_STEPS = 1000  # default additional training steps
 TEMPERATURE = 0.5
 NUM_SAVE_CHECKPOINTS = 10
 
@@ -431,11 +432,12 @@ def reward_function(completions, ground_truth, prompts=None, **kwargs):
 
     return rewards
 
+
+
 # -----------------------------------------------------------------------------
 # Main training function.
 # -----------------------------------------------------------------------------
 def main():
-
     # Parse command-line arguments.
     parser = argparse.ArgumentParser(description="Train a GRPO model with optional checkpoint resume")
     parser.add_argument(
@@ -444,12 +446,64 @@ def main():
         default=None,
         help="Path to checkpoint to resume training from (optional)."
     )
+    # New argument for setting the random seed.
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for reproducibility (default: 42)."
+    )
+    # New argument for specifying additional training steps.
+    parser.add_argument(
+        "--num_train_steps",
+        type=int,
+        default=DEFAULT_TRAINING_STEPS,
+        help="Number of additional training steps to run. If a checkpoint is provided, these steps will be added to the checkpoint's current step count."
+    )
     args = parser.parse_args()
 
     # Set random seeds for reproducibility.
-    torch.manual_seed(42)
-    np.random.seed(42)
+    torch.manual_seed(args.seed)
+    np.random.seed(args.seed)
+
+    # -----------------------------------------------------------------------------
+    # Configure GRPO training parameters.
+    # -----------------------------------------------------------------------------
+    training_args = GRPOConfig(
+        output_dir="./qwen2.5-3b-grpo",
+        logging_steps=1,             # Reduced logging frequency for efficiency
+        num_generations=GRPO_GROUP_SIZE,
+        fp16=False,
+        optim="adamw_torch_fused",
+        max_prompt_length=MAX_PROMPT_LENGTH,
+        max_completion_length=MAX_COMPLETION_LENGTH,
+        learning_rate=LEARNING_RATE,
+        use_vllm=True,                # Enable vLLM (ensure you have an available GPU for generation)
+        warmup_steps=100,
+        weight_decay=0.01,
+        max_steps=args.num_train_steps,  # This value will be updated below if a checkpoint is provided.
+        save_steps=50,
+        save_total_limit=NUM_SAVE_CHECKPOINTS,
+        temperature=TEMPERATURE,
+        beta=0.01,    # kl_weight
+        per_device_train_batch_size=1,
+        gradient_accumulation_steps=4,
+        max_grad_norm=1.0,
+        dataloader_num_workers=1,     # Increase data loader workers for faster preprocessing
+    )
     
+    # If a checkpoint is provided, read the trainer_state.json to update max_steps.
+    if args.checkpoint_path is not None:
+        state_file = os.path.join(args.checkpoint_path, "trainer_state.json")
+        try:
+            with open(state_file, "r") as f:
+                state_data = json.load(f)
+            current_steps = state_data.get("global_step", 0)
+            print(f"Resuming training from checkpoint with {current_steps} steps. Training for an additional {args.num_train_steps} steps.")
+            training_args.max_steps = current_steps + args.num_train_steps
+        except Exception as e:
+            print("Warning: Could not determine checkpoint step count from trainer_state.json. Proceeding with num_train_steps as max_steps.")
+
     # Load and preprocess the GSM8K dataset.
     dataset = load_dataset("gsm8k", "main", split="train")
     dataset = dataset.map(preprocess_example)
@@ -485,43 +539,14 @@ def main():
         lora_alpha=2 * LORA_RANK,
         lora_dropout=0.0,
         use_gradient_checkpointing="unsloth",
-        random_state=42,
+        random_state=args.seed,
     )
    
-
- 
     # -----------------------------------------------------------------------------
-    # Configure GRPO training parameters with vLLM enabled for faster generation.
-    # -----------------------------------------------------------------------------
-    training_args = GRPOConfig(
-        output_dir="./qwen2.5-3b-grpo",
-        logging_steps=1,             # Reduced logging frequency for efficiency
-        num_generations=GRPO_GROUP_SIZE,
-        fp16=False,
-        optim="adamw_torch_fused",
-        max_prompt_length=MAX_PROMPT_LENGTH,
-        max_completion_length=MAX_COMPLETION_LENGTH,
-        learning_rate=LEARNING_RATE,
-        use_vllm=True,                # Enable vLLM (ensure you have an available GPU for generation)
-        warmup_steps=100,
-        weight_decay=0.01,
-        max_steps=MAX_TRAINING_STEPS,
-        save_steps=50,
-        save_total_limit=NUM_SAVE_CHECKPOINTS,
-        temperature=TEMPERATURE,
-        beta=0.01,    # kl_weight
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=4,
-        max_grad_norm=1.0,
-        dataloader_num_workers=1,     # Increase data loader workers for faster preprocessing
-    )
-    
     # Create a detailed logging callback instance.
+    # -----------------------------------------------------------------------------
     callback = DetailedLoggingCallback()
 
-
-
-    
     # -----------------------------------------------------------------------------
     # Initialize the GRPOTrainer with model, reward function, and training dataset.
     # -----------------------------------------------------------------------------
@@ -538,18 +563,14 @@ def main():
     trainer.add_callback(callback)
     trainer.callback = callback
 
-    # optionally resume training if checkpoint 
+    # Optionally resume training if a checkpoint is provided.
     if args.checkpoint_path is not None:
         print("Resuming training from checkpoint:", args.checkpoint_path)
     trainer.train(resume_from_checkpoint=args.checkpoint_path)
     
-    # Start training.
-    #trainer.train()
-    
     # Save the final model after training.
     trainer.save_model("./qwen2.5-3b-grpo-final")
     print("Training completed. Final model saved to ./qwen2.5-3b-grpo-final")
-
 
 if __name__ == "__main__":
     main()
