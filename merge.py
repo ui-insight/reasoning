@@ -24,8 +24,10 @@ from peft import PeftModel
 # Configuration based on your training script
 # -----------------------------------------------------------------------------
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"  # Base model from Hugging Face
-ADAPTER_PATH = os.path.expanduser("~/src/reasoning/qwen2.5-3b-grpo/checkpoint-1000")  # QLoRA adapter path
-OUTPUT_DIR = "qwen2.5-3b-merged_hf"  # Output directory for merged HF model
+#ADAPTER_PATH = os.path.expanduser("~/src/reasoning/qwen2.5-3b-sft-unsloth-4bit/checkpoint-1000")  # QLoRA adapter path
+ADAPTER_PATH = os.path.expanduser("~/src/reasoning/qwen2.5-3b-reasoning-model/checkpoint-1300")  # QLoRA adapter path
+#OUTPUT_DIR = "sft4_model_merged"  # Output directory for merged HF model
+OUTPUT_DIR = "model_merged"  # Output directory for merged HF model
 
 # Configure logging for robust diagnostic output.
 logging.basicConfig(

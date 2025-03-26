@@ -1,0 +1,16 @@
+
+# Create our semi-synthetic training data based on GSM8K
+python ./synth.py -> synthetic_gsm8k_formatted2.jsonl
+
+# Perform causal SFT as cold-start for formatting - QLoRA
+python ./sft.py   ->  qwen2.5-3b-sft-unsloth-4bit
+
+# Perform GRPO reinforcement learning - QLoRA
+python ./grpo.py  ->  qwen2.5-3b-reasoning-model
+
+# Merge QLoRA adaptor with based model to produce merged HuggingFace model
+python ./merge.py ->  model_merged
+
+# Convert HuggingFace formatted model to GGUF
+python ./llama.cpp/convert_hf_to_gguf.py model_merged --outfile model.gguf
+
